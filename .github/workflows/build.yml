@@ -57,5 +57,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: مازِی ${{ env.VERSION }}
-          generate_release_notes: true
+          body_path: docs/release-notes.md
           files: dist/*

@@ -12,14 +12,25 @@
 
 <div dir="rtl">
 
-## دانلود
+## دانلود — نسخه ۱.۰.۱
 
-نصب‌کننده و فایل اجرایی در صفحهٔ [Releases](https://github.com/irariamir/Mazey/releases/latest) است.
+فایل‌ها در [Releases / v1.0.1](https://github.com/irariamir/Mazey/releases/latest) هستند. الان **Latest** همان ۱.۰.۱ است.
 
-- **Mazey-Setup.exe** — نصب برای ویندوز. فقط همین کاربر، بدون Admin.
-- **Mazey-Portable.exe** — بدون نصب، مستقیم اجرا می‌شود.
+- **[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** — نصب معمولی. فقط همین کاربر ویندوز، بدون Admin. بیشتر افراد همین را بردارند.
+- **[Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)** — نصب نمی‌خواهد؛ مستقیم اجرا می‌شود.
+- **[Mazey-Windows.zip](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Windows.zip)** — خودِ برنامه داخل زیپ.
 
-ویندوز ۱۰ یا ۱۱. اگر SmartScreen آمد، Run anyway.
+`latest.json` مال آپدیتر داخل برنامه است؛ لازم نیست دستی دانلود شود.
+
+ویندوز ۱۰ یا ۱۱. اگر SmartScreen آمد: More info → Run anyway.
+
+اگر نسخهٔ **۱.۰.۰** را قبلاً نصب کرده‌ای، از منوی مازِی **بررسی آپدیت** را بزن تا ۱.۰.۱ بیاید.
+
+### ۱.۰.۱ نسبت به ۱.۰.۰
+
+- کلیک ساعت/تاریخ جزیره را حدود ۱۰ ثانیه باز نگه می‌دارد.
+- متن نصب‌کننده انگلیسی و خواناست.
+- بررسی آپدیت به همین ریپو وصل شد.
 
 ## امکانات
 
@@ -51,7 +62,7 @@
 ```
 cd src-tauri
 cargo build --release
-makensis /DVERSION=1.0.0 installer/island.nsi
+makensis /DVERSION=1.0.1 installer/island.nsi
 ```
 
 مجوز MIT.
