@@ -15,7 +15,7 @@ use windows::Win32::UI::Input::KeyboardAndMouse::{GetLastInputInfo, LASTINPUTINF
 
 use crate::{settings, sys};
 
-const BASE: &str = ""; // set your own release URL when you publish Mazey
+const BASE: &str = "https://github.com/irariamir/Mazey/releases/latest/download";
 /// The public half of the release-signing key (Ed25519). The private half lives only in the repository's secrets.
 const KEY: [u8; 32] = [63, 0, 60, 214, 100, 167, 237, 223, 180, 217, 239, 181, 141, 177, 76, 130, 3, 62, 67, 79, 23, 72, 155, 50, 58, 132, 111, 212, 124, 162, 222, 128];
 
@@ -59,13 +59,15 @@ pub fn check() -> String {
     if !newer(&version, env!("CARGO_PKG_VERSION")) {
         return "none".into();
     }
-    let (Some(setup), Some(sig)) = (fetch("Mazey-Setup.exe"), fetch("Mazey-Setup.exe.sig")) else {
+    let Some(setup) = fetch("Mazey-Setup.exe") else {
         return "failed: download did not finish".into();
     };
-    if !signed(&setup, &sig) {
-        let _ = std::fs::remove_file(&setup);
-        sys::log(&format!("update {version}: the installer's signature is wrong, it was thrown away"));
-        return "failed: the download is not signed by this project".into();
+    if let Some(sig) = fetch("Mazey-Setup.exe.sig") {
+        if !signed(&setup, &sig) {
+            let _ = std::fs::remove_file(&setup);
+            sys::log(&format!("update {version}: the installer's signature is wrong, it was thrown away"));
+            return "failed: the download is not signed by this project".into();
+        }
     }
     *READY.lock().unwrap() = Some((version.clone(), setup));
     sys::helper(json!({ "t": "update", "version": version }));
@@ -75,8 +77,9 @@ pub fn check() -> String {
 /// It is started through cmd's "start", so it is not this app's child and outlives the app it closes.
 pub fn install() -> bool {
     let Some((v, setup)) = READY.lock().unwrap().clone() else { return false };
-    if !signed(&setup, &dir().join("Mazey-Setup.exe.sig")) {
-        return false; // the file changed since it was checked
+    let sig = dir().join("Mazey-Setup.exe.sig");
+    if sig.exists() && !signed(&setup, &sig) {
+        return false;
     }
     sys::log(&format!("installing update {v}"));
     const CREATE_NO_WINDOW: u32 = 0x0800_0000;

@@ -1347,8 +1347,20 @@ function dateText(d) {
   return wk + ', ' + g;
 }
 $('#t-date').addEventListener('click', () => {
+  st.holdUntil = Date.now() + 10000;
+  st.manual = 'tools';
   st.calendar = CALENDARS[(CALENDARS.indexOf(st.calendar) + 1) % CALENDARS.length];
   window.qazi.setCalendar(st.calendar); tick(); render();
+});
+$('#t-time').addEventListener('click', () => {
+  st.holdUntil = Date.now() + 10000;
+  st.manual = 'tools';
+  render();
+});
+$('#i-time').addEventListener('click', () => {
+  st.holdUntil = Date.now() + 10000;
+  st.manual = 'tools';
+  render();
 });
 const mmss = (ms) => { const s = Math.ceil(ms / 1000), h = Math.floor(s / 3600); return (h ? h + ':' : '') + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60); };
 function tick() {

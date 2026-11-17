@@ -1,8 +1,9 @@
-; Mazey — same install model as Peeky: per-user, no admin, /S is silent (how updates arrive).
+; Mazey — per-user installer. /S is silent (how updates arrive).
 Unicode true
 !include "MUI2.nsh"
+!include "LogicLib.nsh"
 !ifndef VERSION
-  !define VERSION "1.0.0"
+  !define VERSION "1.0.1"
 !endif
 !define NAME "Mazey"
 !define EXE "Mazey.exe"
@@ -15,14 +16,13 @@ InstallDir "$LOCALAPPDATA\Programs\Mazey"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
 ShowInstDetails nevershow
-AutoCloseWindow true
 Caption "${NAME} ${VERSION}"
 VIProductVersion "${VERSION}.0"
 VIAddVersionKey "ProductName" "${NAME}"
 VIAddVersionKey "FileDescription" "${NAME} installer"
 VIAddVersionKey "FileVersion" "${VERSION}"
 VIAddVersionKey "LegalCopyright" "ARIAMIR"
-BrandingText "Mazey · گروه آموزشی ماز"
+BrandingText "Mazey"
 
 !define MUI_ICON "..\src-tauri\icons\icon.ico"
 !define MUI_UNICON "..\src-tauri\icons\icon.ico"
@@ -30,10 +30,16 @@ BrandingText "Mazey · گروه آموزشی ماز"
 !define MUI_HEADERIMAGE_BITMAP "header.bmp"
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_WELCOMEFINISHPAGE_BITMAP "welcome.bmp"
-!define MUI_WELCOMEPAGE_TITLE "مازِی"
-!define MUI_WELCOMEPAGE_TEXT "جزیره بالای لپ‌تاپ برای گروه آموزشی ماز. نصب فقط برای همین کاربر است — Admin لازم نیست. بعد از نصب خودش باز می‌شود و با ویندوز می‌آید."
+!define MUI_WELCOMEPAGE_TITLE "Mazey"
+!define MUI_WELCOMEPAGE_TEXT "A small island at the top of your screen for Maze students.\r\n\r\nInstalls for this Windows user only. No administrator password.\r\nWhen setup finishes, Mazey opens by itself."
+!define MUI_FINISHPAGE_NOAUTOCLOSE
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${EXE}"
+!define MUI_FINISHPAGE_RUN_TEXT "Open Mazey"
+!define MUI_FINISHPAGE_TITLE "Mazey is installed"
+!define MUI_FINISHPAGE_TEXT "Mazey sits at the top of the screen. Hover to open the menu. You can start it with Windows from Settings."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
@@ -68,7 +74,9 @@ Section "Install"
   WriteRegStr HKCU "${UNKEY}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
   WriteRegDWORD HKCU "${UNKEY}" "NoModify" 1
   WriteRegDWORD HKCU "${UNKEY}" "NoRepair" 1
-  Exec '"$INSTDIR\${EXE}"'
+  ${If} ${Silent}
+    Exec '"$INSTDIR\${EXE}"'
+  ${EndIf}
 SectionEnd
 
 Section "Uninstall"
