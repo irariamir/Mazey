@@ -1,0 +1,7 @@
+/dist/
+/src-tauri/target/
+node_modules/
+.claude/
+*.pem
+.ssh/
+.DS_Store

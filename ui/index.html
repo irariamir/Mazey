@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>مازِی</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="glow"></div>
+<svg width="0" height="0" style="position:absolute"><filter id="goo-f"><feGaussianBlur in="SourceGraphic" stdDeviation="3.2"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></svg>
+<canvas id="goo" width="700" height="96"></canvas>
+<canvas id="fx" width="700" height="110"></canvas>
+
+<div id="island">
+  <canvas id="sky"></canvas>
+
+  <!-- idle: just the time (or a running countdown) -->
+  <div class="view on" data-view="idle">
+    <span id="i-face"><i></i><i></i></span><span id="i-mark" title="مازِی"><img src="brand/mazey-app.png" alt=""></span><span id="i-time">--:--</span><span id="i-shelf"></span>
+  </div>
+
+  <!-- hover on idle: a one-line tray -->
+  <div class="view" data-view="tools">
+    <span id="t-time" class="strong">--:--</span>
+    <span id="t-date" class="dim" title="بزن تقویم عوض شود"></span>
+    <span id="t-bat" class="dim"></span>
+    <span id="t-net" class="tag"></span>
+    <span class="sep"></span>
+    <button class="ib hidden" id="t-track" data-icon="note" title="برگرد به آهنگ"></button>
+    <button class="ib" id="t-play" data-icon="play" title="پخش / توقف"></button>
+    <button class="ib" data-act="screenshot" data-icon="shot" title="اسکرین‌شات"></button>
+    <button class="ib" data-act="ocr" data-icon="scan" title="خواندن متن از صفحه: دورش کادر بکش (Ctrl+Alt+T)"></button>
+    <button class="ib" data-act="clips" id="t-clips" data-icon="clipboard" title="تاریخچهٔ کپی"></button>
+    <button class="ib" data-act="notes" id="t-notes" data-icon="jot" title="یادداشت سریع (Ctrl+Alt+N)"></button>
+    <button class="ib" data-act="vault" id="t-vault" data-icon="key" title="رمزها"></button>
+    <button class="ib hidden" data-act="speedo" id="t-speedo" data-icon="shield" title="Speedo VPN"></button>
+    <button class="ib maze" data-act="maze" data-icon="maze" title="سایت ماز"></button>
+    <button class="ib" data-act="timer" data-icon="timer" title="تایمر"></button>
+    <button class="ib hidden" data-act="shelf" id="t-shelf" data-icon="tray" draggable="true" title="قفسهٔ فایل — کلیک ببین، بکش همه را ببر"></button>
+    <button class="ib" data-act="inbox" id="t-inbox" data-icon="bell" title="نوتیفیکیشن‌ها"></button>
+    <button class="ib" data-act="settings" id="t-gear" data-icon="gear" title="تنظیمات"></button>
+  </div>
+
+  <!-- now playing -->
+  <div class="view" data-view="media">
+    <div id="art"></div>
+    <div class="meta">
+      <div id="m-title">چیزی پخش نمی‌شود</div>
+      <div id="m-artist"></div>
+    </div>
+    <canvas id="bars" width="60" height="40"></canvas>
+    <span id="m-timer"></span>
+    <button class="ib" id="b-prev" data-icon="prev" title="قبلی"></button>
+    <button class="ib solid" id="b-play" data-icon="play" title="پخش / مکث"></button>
+    <button class="ib" id="b-next" data-icon="next" title="بعدی"></button>
+    <button class="ib small" id="b-more" data-icon="more" title="منوی اصلی"></button>
+  </div>
+
+  <!-- incoming notification (same line, replaces whatever is showing) -->
+  <div class="view" data-view="notif">
+    <div id="n-icon"></div>
+    <span id="n-app" class="dim"></span>
+    <span id="n-title" class="strong" dir="auto"></span>
+    <span id="n-body" class="mqbox" dir="auto"><span class="mq"></span></span>
+  </div>
+
+  <!-- short status line: copied text, charger, Bluetooth device, files held -->
+  <div class="view" data-view="hud">
+    <span id="h-icon" class="glyph"></span>
+    <span id="h-title" class="strong" dir="auto"></span>
+    <span id="h-text" class="mqbox" dir="auto"><span class="mq"></span></span>
+  </div>
+
+  <!-- a file is being dragged over the pill -->
+  <div class="view" data-view="drop">
+    <span class="glyph" data-icon="tray"></span>
+    <span class="strong">رها کن تا نگه دارد</span>
+  </div>
+
+  <!-- files being held: they sit on the pill, side by side, until they are dragged out again -->
+  <div class="view" data-view="held">
+    <div id="hd-files"></div>
+    <button id="hd-more" class="dim" title="همهٔ فایل‌ها"></button>
+    <button class="ib small" id="hd-menu" data-icon="more" title="منو"></button>
+  </div>
+
+  <!-- volume HUD -->
+  <div class="view" data-view="vol" title="بزن بی‌صدا شود">
+    <span id="v-icon" class="glyph" data-icon="volume"></span>
+    <div class="vbar"><i id="v-fill"></i></div>
+    <b id="v-num">50</b>
+  </div>
+
+  <!-- timer -->
+  <div class="view" data-view="timer">
+    <span class="glyph amber" data-icon="timer"></span>
+    <button class="ib small" id="tm-minus" data-icon="minus" title="کمتر"></button>
+    <span id="tm-time">25:00</span>
+    <button class="ib small" id="tm-plus" data-icon="plus" title="بیشتر"></button>
+    <button class="ib solid" id="tm-start" data-icon="play" title="شروع / مکث"></button>
+    <button class="ib" id="tm-reset" data-icon="reset" title="از اول"></button>
+  </div>
+
+  <!-- one line of typing: a quick note, or the steps of saving a password -->
+  <div class="view" data-view="input">
+    <span id="in-icon" class="glyph"></span>
+    <input id="in-text" type="text" spellcheck="false" autocomplete="off" dir="auto">
+    <span id="in-hint" class="dim"></span>
+    <button class="ib small" id="in-ok" data-icon="check" title="باشه (Enter)"></button>
+    <button class="ib small" id="in-cancel" data-icon="close" title="انصراف (Esc)"></button>
+  </div>
+
+  <!-- a fresh password -->
+  <div class="view" data-view="gen">
+    <span class="glyph" data-icon="key"></span>
+    <span id="g-pass"></span>
+    <button class="ib small" id="g-again" data-icon="reset" title="یکی دیگه"></button>
+    <button class="ib small" id="g-minus" data-icon="minus" title="کوتاه‌تر"></button>
+    <span id="g-len" class="dim">18</span>
+    <button class="ib small" id="g-plus" data-icon="plus" title="بلندتر"></button>
+    <button class="ib small" id="g-sym" title="نمادها روشن / خاموش">#</button>
+    <button class="ib solid" id="g-ok" data-icon="check" title="همین باشه: کپی می‌شود، بعد می‌پرسد برای کجاست"></button>
+    <button class="ib small" id="g-cancel" data-icon="close" title="بدون ذخیره ببند"></button>
+  </div>
+
+  <!-- track position: a hairline that becomes a scrubber when the cursor reaches the bottom edge -->
+  <div id="seek"><i id="seek-fill"></i><b id="seek-knob"></b></div>
+
+  <div id="dots"></div>
+  <div id="flash"></div>
+</div>
+
+<!-- a notification that arrives while the pill is being used waits here, beside it -->
+<div id="side"><div class="ic"></div><span dir="auto"></span></div>
+
+<!-- the stack: small pills that drop under the island (notifications, or the files on the shelf) -->
+<div id="stack">
+  <div id="stack-head"></div>
+  <div id="stack-list"></div>
+  <button id="stack-clear">پاک کردن همه</button>
+</div>
+
+<script src="bridge.js"></script>
+<script src="demo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
