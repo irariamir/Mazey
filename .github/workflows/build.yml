@@ -25,7 +25,7 @@ jobs:
 
       - name: Build
         working-directory: src-tauri
-        run: cargo build --release --locked
+        run: cargo build --release
 
       - name: Package
         shell: pwsh
