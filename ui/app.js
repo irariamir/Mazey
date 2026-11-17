@@ -905,7 +905,7 @@ const LIQ = {
   venom: { bg: [0, 0, 1], lo: [14, 15, 19], hi: [38, 41, 50], spec: [150, 156, 170], thr: 0.62, speed: 0.55 },
 };
 function paintLiquid(g, t, x0, x1, W, A, P) {
-  const d = fimg.data, tt = t * 0.0006 * P.speed, scroll = t * 0.021 * P.speed;
+  const d = fimg.data, tt = t * 0.00042 * P.speed, scroll = t * 0.014 * P.speed;
   const c0 = Math.max(0, Math.floor(x0 / 2) - 1), c1 = Math.min(FW, Math.ceil(x1 / 2) + 1);
   const flood = energy * 0.9 + bass * 0.22, bg = P.bg, lo = P.lo, hi = P.hi, sp = P.spec;
   for (let x = c0; x < c1; x++) {

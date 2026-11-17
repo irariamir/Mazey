@@ -12,9 +12,9 @@
 
 <div dir="rtl">
 
-## دانلود — نسخه ۱.۰.۲
+## دانلود — نسخه ۱.۰.۳
 
-فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند. **Latest** الان ۱.۰.۲ است.
+فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند. **Latest** الان ۱.۰.۳ است.
 
 - **[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** — نصب معمولی. فقط همین کاربر، بدون Admin. بیشتر افراد همین را بردارند.
 - **[Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)** — نصب نمی‌خواهد؛ مستقیم اجرا می‌شود.
@@ -26,6 +26,7 @@
 
 ### چه چیزی عوض شد
 
+- **۱.۰.۳** حرکت جزیره نرم‌تر شد؛ آپدیت داخل برنامه امضا می‌شود.
 - **۱.۰.۲** لینک بعد از آپدیت درست شد؛ تنظیمات برنامه قاطی نمی‌شود؛ راهنمای دکمهٔ ماز با رفتار واقعی یکی است.
 - **۱.۰.۱** ساعت حدود ۱۰ ثانیه باز می‌ماند؛ نصب‌کننده انگلیسی است؛ بررسی آپدیت به همین ریپو وصل شد.
 
@@ -63,7 +64,7 @@ Rust و NSIS لازم است. از ریشهٔ ریپو:
 cd src-tauri
 cargo build --release
 cd ..
-makensis /DVERSION=1.0.2 installer/island.nsi
+makensis /DVERSION=1.0.3 installer/island.nsi
 ```
 
 هر پوش روی [Actions](.github/workflows/build.yml) بیلد می‌شود. تگ `vX.Y.Z` ریلیز می‌کند.
