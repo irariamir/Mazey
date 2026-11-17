@@ -1,5 +1,5 @@
 // Updates: now and then the app asks GitHub whether a newer release exists, downloads its installer, checks
-// that it was signed with the project's key, and tells the page. With "Update automatically" on (the default)
+// that it was signed with the project's key, and tells the page. With "Update automatically" on,
 // it then installs itself at a quiet moment: right after the app has started, or once nobody has touched the
 // computer for a few minutes. Otherwise one click installs it. The next start says what happened.
 use std::os::windows::process::CommandExt;
@@ -16,8 +16,8 @@ use windows::Win32::UI::Input::KeyboardAndMouse::{GetLastInputInfo, LASTINPUTINF
 use crate::{settings, sys};
 
 const BASE: &str = "https://github.com/irariamir/Mazey/releases/latest/download";
-/// The public half of the release-signing key (Ed25519). The private half lives only in the repository's secrets.
-const KEY: [u8; 32] = [63, 0, 60, 214, 100, 167, 237, 223, 180, 217, 239, 181, 141, 177, 76, 130, 3, 62, 67, 79, 23, 72, 155, 50, 58, 132, 111, 212, 124, 162, 222, 128];
+/// The public half of the release-signing key (Ed25519). The private half lives only in GitHub Actions secret MAZEY_SIGN_KEY.
+const KEY: [u8; 32] = [145, 254, 18, 159, 239, 104, 249, 22, 52, 243, 124, 250, 198, 129, 85, 20, 237, 205, 146, 161, 159, 165, 147, 163, 146, 61, 105, 144, 145, 110, 153, 152];
 
 static READY: Mutex<Option<(String, PathBuf)>> = Mutex::new(None);
 
@@ -27,6 +27,9 @@ fn dir() -> PathBuf {
     d
 }
 fn fetch(name: &str) -> Option<PathBuf> {
+    if name.is_empty() || name.bytes().any(|b| matches!(b, b'/' | b'\\' | 0)) || name.contains("..") {
+        return None;
+    }
     let to = dir().join(name);
     let _ = std::fs::remove_file(&to);
     let url = format!("{BASE}/{name}?t={}", sys::now_ms()); // the query keeps Windows from serving an old copy
@@ -59,15 +62,13 @@ pub fn check() -> String {
     if !newer(&version, env!("CARGO_PKG_VERSION")) {
         return "none".into();
     }
-    let Some(setup) = fetch("Mazey-Setup.exe") else {
+    let (Some(setup), Some(sig)) = (fetch("Mazey-Setup.exe"), fetch("Mazey-Setup.exe.sig")) else {
         return "failed: download did not finish".into();
     };
-    if let Some(sig) = fetch("Mazey-Setup.exe.sig") {
-        if !signed(&setup, &sig) {
-            let _ = std::fs::remove_file(&setup);
-            sys::log(&format!("update {version}: the installer's signature is wrong, it was thrown away"));
-            return "failed: the download is not signed by this project".into();
-        }
+    if !signed(&setup, &sig) {
+        let _ = std::fs::remove_file(&setup);
+        sys::log(&format!("update {version}: the installer's signature is wrong, it was thrown away"));
+        return "failed: the download is not signed by this project".into();
     }
     *READY.lock().unwrap() = Some((version.clone(), setup));
     sys::helper(json!({ "t": "update", "version": version }));
@@ -77,8 +78,7 @@ pub fn check() -> String {
 /// It is started through cmd's "start", so it is not this app's child and outlives the app it closes.
 pub fn install() -> bool {
     let Some((v, setup)) = READY.lock().unwrap().clone() else { return false };
-    let sig = dir().join("Mazey-Setup.exe.sig");
-    if sig.exists() && !signed(&setup, &sig) {
+    if !signed(&setup, &dir().join("Mazey-Setup.exe.sig")) {
         return false;
     }
     sys::log(&format!("installing update {v}"));
