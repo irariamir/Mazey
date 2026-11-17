@@ -2,82 +2,65 @@
 
 # مازِی
 
-**جزیرهٔ کوچک ویندوز، برای بچه‌های ماز.**
+**یک جزیرهٔ کوچک برای ویندوز.** بالای صفحه می‌نشیند، آهنگ را نشان می‌دهد، نوتیفیکیشن می‌گیرد، کپی را یادش می‌ماند، فایل نگه می‌دارد و بین کارها پلک می‌زند.
 
-یک قرص بالای صفحه. آهنگ، نوتیفیکیشن، کپی، فایل، تایمر درس.  
-و هر بار که نگاهش می‌کنی، مسیر یادت می‌آید.
+برای بچه‌های [گروه آموزشی ماز](https://biomaze.ir).
 
 [![release](https://img.shields.io/github/v/release/irariamir/Mazey?label=release&color=555)](https://github.com/irariamir/Mazey/releases/latest)
 [![downloads](https://img.shields.io/github/downloads/irariamir/Mazey/total?label=downloads&color=555)](https://github.com/irariamir/Mazey/releases)
 [![build](https://img.shields.io/github/actions/workflow/status/irariamir/Mazey/build.yml?branch=main&label=build)](https://github.com/irariamir/Mazey/actions/workflows/build.yml)
 [![license](https://img.shields.io/badge/license-MIT-555)](LICENSE)
 
-[دانلود نصب‌کننده](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)
-&nbsp;·&nbsp;
-[نسخهٔ پرتابل](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)
-&nbsp;·&nbsp;
-[zip](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Windows.zip)
+[![نصب ویندوز](https://img.shields.io/badge/دانلود-Mazey--Setup.exe-1A6CFF?style=for-the-badge)](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)
+[![پرتابل](https://img.shields.io/badge/پرتابل-.exe-1f2328?style=for-the-badge)](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)
+[![zip](https://img.shields.io/badge/zip-Windows-1f2328?style=for-the-badge)](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Windows.zip)
 
-<img src="docs/hero-preview.jpg" width="860" alt="مازِی بالای صفحه، روی صحنهٔ اورست ماز">
+<img src="docs/hero.jpg" width="860" alt="مازِی">
 
 </div>
 
 <div dir="rtl">
 
-ماز را در کلاس می‌خوانی. مازِی را روی لپ‌تاپ می‌گذاری.
+## امکانات
 
-من دانش‌آموز دوازدهم ریاضی‌ام. ماز برای من قله بود؛ دلم می‌خواست همان قله از سایت بیرون بیاید و بالای صفحه بنشیند. چیزی که از حد یک کلاس فراتر برود، ولی ماز را فراموش نکند.
+- **پخش موزیک.** اسم آهنگ، خواننده، کاور و دکمه‌های کنترل. با فیلم و بازی تمام‌صفحه کاری ندارد.
+- **نوتیفیکیشن یک خط.** بزن همان چت باز می‌شود. اگر مشغول جزیره باشی، کنارش منتظر می‌ماند.
+- **کپی هوشمند.** لینک باز می‌شود، حساب جواب می‌گیرد، تاریخ میلادی و شمسی به هم تبدیل می‌شوند.
+- **قفسهٔ فایل.** فایل را روی جزیره رها کن؛ تا وقتی لازم داری همان‌جا می‌ماند.
+- **یادداشت.** از هر جا `Ctrl+Alt+N`. اگر توی متن زمان باشد («۱۰ دقیقه دیگه زیست») یادآور می‌شود.
+- **رمز.** می‌سازد، می‌پرسد برای کجاست، با حساب ویندوز قفل می‌کند.
+- **خواندن متن از صفحه.** `Ctrl+Alt+T`، دورش کادر بکش. فارسی و انگلیسی. از دستگاهت بیرون نمی‌رود.
+- **تایمر درس.** تا آخر روی صفحه می‌ماند.
+- **دکمهٔ ماز.** یک جملهٔ کوتاه می‌گوید و بعد از چند ثانیه می‌رود.
+- **تم اورست** پیش‌فرض است. تم آریامیر هم هست.
 
-مازِی را برای [گروه آموزشی ماز](https://biomaze.ir) ساختم. کارگاهش [ARIAMIR](http://ariamir.ct.ws) است.
-
-## چه کار می‌کند
-
-موس را روی قرص بالای صفحه ببر. منو باز می‌شود.
-
-آهنگ در حال پخش همین‌جاست: اسم، کاور، قبلی و بعدی. فیلم و بازی تمام‌صفحه را ول می‌کند.
-
-نوتیفیکیشن یک خط است. بزن، همان چت باز می‌شود.
-
-چیزی کپی کردی، لینک بود باز می‌شود، حساب بود جوابش را می‌دهد، تاریخ بود شمسی و میلادی‌اش را می‌گوید.
-
-فایل را روی جزیره رها کن. تا وقتی لازم داری همان‌جا می‌ماند.
-
-`Ctrl+Alt+N` یک خط یادداشت. اگر بنویسی «۱۰ دقیقه دیگه زیست»، یادش می‌ماند.
-
-رمز می‌سازد، می‌پرسد برای کدام سایت است، با حساب ویندوز قفلش می‌کند.
-
-`Ctrl+Alt+T` دور متن کادر بکش؛ فارسی و انگلیسی. چیزی از دستگاه بیرون نمی‌رود.
-
-تایمر درس تا ته روی صفحه می‌ماند.
-
-دکمهٔ ماز یک جمله می‌گوید و می‌رود.
-
-چشم‌های جزیره پلک می‌زنند. تم پیش‌فرض اورست است؛ تم آریامیر هم هست.
-
-تنظیمات داخل خود جزیره است. پنجرهٔ جدا ندارد.
+بار اول که باز می‌شود، خودش نشان می‌دهد چه کارهایی ازش برمی‌آید.
 
 ## نصب
 
-ویندوز ۱۰ یا ۱۱. روی ۱۱ چیزی اضافه لازم نیست.
+ویندوز ۱۰ یا ۱۱.
 
-**[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** را بگیر و باز کن. فقط برای همین کاربر نصب می‌شود، رمز ادمین نمی‌خواهد، بعد از نصب خودش می‌آید بالا. از تنظیمات می‌شود گفت با ویندوز باز شود.
+[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe) را دانلود کن و باز کن. فقط برای همین کاربر نصب می‌شود، Admin نمی‌خواهد، بعد از نصب خودش بالا می‌آید.
 
-ویندوز یک بار SmartScreen را نشان می‌دهد. Run anyway.
+ویندوز ممکن است یک بار SmartScreen نشان بدهد. Run anyway بزن.
 
-اگر نصب نمی‌خواهی: **[Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)**
+بدون نصب: [Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)
+
+فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند.
 
 ## حریم خصوصی
 
-مازِی به اینترنت نمی‌زند، مگر برای دیدن نسخهٔ جدید همین ریپو. آن را هم می‌شود خاموش کرد.
-
-نوتیفیکیشن، کپی، یادداشت و رمز روی سیستم خودت می‌مانند.
+به اینترنت وصل نمی‌شود، مگر برای چک کردن نسخهٔ جدید همین ریپو. آن را هم می‌شود از تنظیمات خاموش کرد. نوتیفیکیشن، کپی، یادداشت و رمز روی سیستم خودت می‌مانند.
 
 ## سازنده
 
-آریامیر. دوازدهم ریاضی.  
-کانال [@Ariamir_academy](https://t.me/Ariamir_academy) · [@ariamir_ir](https://t.me/ariamir_ir) · سفارش [@ARIAMIRBOT](https://t.me/ARIAMIRBOT)
+آریامیر. دانش‌آموز دوازدهم ریاضی.
 
-## ساختن
+ماز را که خواندم، دلم خواست روی لپ‌تاپ هم باشد. نه فقط توی سایت. مازِی را برای همین ساختم.
+
+[ARIAMIR](http://ariamir.ct.ws) · [@Ariamir_academy](https://t.me/Ariamir_academy) · [@ariamir_ir](https://t.me/ariamir_ir)
+
+## ساختن از سورس
 
 ```
 cd src-tauri
@@ -85,6 +68,6 @@ cargo build --release
 makensis /DVERSION=1.0.0 installer/island.nsi
 ```
 
-مجوز [MIT](LICENSE). شکل جزیره از [Peeky](https://github.com/raminturne/peeky) آمده.
+[MIT](LICENSE). شکل جزیره از [Peeky](https://github.com/raminturne/peeky).
 
 </div>

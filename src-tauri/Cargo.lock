@@ -2459,8 +2459,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "peeky"
-version = "2.1.2"
+name = "mazey"
+version = "1.0.0"
 dependencies = [
  "base64 0.22.1",
  "ed25519-compact",
