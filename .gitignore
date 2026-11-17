@@ -5,3 +5,4 @@ node_modules/
 *.pem
 .ssh/
 .DS_Store
+/preview/

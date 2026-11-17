@@ -21,7 +21,6 @@ use windows::Win32::UI::Shell::*;
 use windows::Win32::UI::WindowsAndMessaging::*;
 
 pub const APP_NAME: &str = "Mazey";
-pub const OLD_NAME: &str = "Peeky"; // unused; kept so a leftover Run key can be cleaned
 
 pub static APP: OnceLock<AppHandle> = OnceLock::new();
 pub static DEBUG_DIR: OnceLock<Option<PathBuf>> = OnceLock::new();
@@ -82,30 +81,12 @@ pub fn com_init() {
 }
 
 // ---------------------------------------------------------------- files
-/// Settings, pins, notes and the vault live here (the same folder the Electron version used).
+/// Settings, pins, notes and the vault live here.
 pub fn data_dir() -> PathBuf {
     let dir = match debug_dir() {
         Some(d) => d.join("userdata"),
         None => {
-            let base = PathBuf::from(std::env::var_os("APPDATA").unwrap_or_default());
-            let dir = base.join(APP_NAME);
-            let old = base.join(OLD_NAME);
-            if !dir.exists() && old.exists() {
-                let _ = std::fs::rename(&old, &dir); // settings, pins, notes and passwords move with the new name
-            }
-            // The new folder may already have been there (then nothing was renamed): bring over, once, whatever it lacks.
-            static CARRY: std::sync::Once = std::sync::Once::new();
-            CARRY.call_once(|| {
-                if old.exists() {
-                    let _ = std::fs::create_dir_all(&dir);
-                    for name in ["notes.json", "vault.bin", "clips.json", "settings.json"] {
-                        if !dir.join(name).exists() && old.join(name).exists() {
-                            let _ = std::fs::copy(old.join(name), dir.join(name));
-                        }
-                    }
-                }
-            });
-            dir
+            PathBuf::from(std::env::var_os("APPDATA").unwrap_or_default()).join(APP_NAME)
         }
     };
     let _ = std::fs::create_dir_all(&dir);

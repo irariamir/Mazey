@@ -316,7 +316,7 @@ side.addEventListener('click', () => {
     if (n.action === 'dnd') window.qazi.action('dnd');
     else if (n.action === 'download') window.qazi.openDownload(n.path);
     else if (n.action === 'update') window.qazi.updateInstall();
-    else if (n.action === 'whatsnew') window.qazi.openUrl('https://github.com/raminturne/mazey/releases/tag/v' + n.version);
+    else if (n.action === 'whatsnew') window.qazi.openUrl('https://github.com/irariamir/Mazey/releases/tag/v' + n.version);
     else if (n.action === 'note') { st.holdUntil = Date.now() + 5000; setStack(true, 'notes'); }
     else if (n.action === 'tour') { st.holdUntil = Date.now() + 9000; st.revealUntil = Date.now() + 9000; setStack(true, 'tour'); }
     else if (n.aumid) { window.qazi.activate(n.id, n.aumid); dropHistory(n.id); }
@@ -360,7 +360,7 @@ views.notif.addEventListener('click', () => {
     if (n.action === 'dnd') window.qazi.action('dnd');
     else if (n.action === 'download') window.qazi.openDownload(n.path);
     else if (n.action === 'update') window.qazi.updateInstall();
-    else if (n.action === 'whatsnew') window.qazi.openUrl('https://github.com/raminturne/mazey/releases/tag/v' + n.version);
+    else if (n.action === 'whatsnew') window.qazi.openUrl('https://github.com/irariamir/Mazey/releases/tag/v' + n.version);
     else if (n.action === 'note') { st.holdUntil = Date.now() + 5000; setStack(true, 'notes'); }
     else if (n.action === 'tour') { st.holdUntil = Date.now() + 9000; st.revealUntil = Date.now() + 9000; setStack(true, 'tour'); }
     else if (n.aumid) { window.qazi.activate(n.id, n.aumid); dropHistory(n.id); }
@@ -2030,7 +2030,7 @@ const TOUR = [
   ['key', 'رمزها', 'می‌سازد، می‌پرسد برای کجاست، رمزنگاری می‌کند', 'vault'],
   ['timer', 'تایمر درس', 'تا تهش روی صفحه می‌ماند', 'timer'],
   ['gear', 'تم و تنظیمات', 'اورست ماز، آریامیر، ونوم و بقیه', 'settings'],
-  ['maze', 'سایت ماز', 'یک زدن تا biomaze.ir. مسیر همین‌جاست', 'maze'],
+  ['maze', 'جملهٔ ماز', 'یک زدن، یک جمله. حدود ۱۰ ثانیه می‌ماند', 'maze'],
 ];
 function renderTour() {
   $('#stack-clear').classList.add('hidden');

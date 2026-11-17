@@ -3,7 +3,7 @@ Unicode true
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !ifndef VERSION
-  !define VERSION "1.0.1"
+  !define VERSION "1.0.2"
 !endif
 !define NAME "Mazey"
 !define EXE "Mazey.exe"
@@ -70,7 +70,7 @@ Section "Install"
   WriteRegStr HKCU "${UNKEY}" "DisplayIcon" "$INSTDIR\${EXE}"
   WriteRegStr HKCU "${UNKEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKCU "${UNKEY}" "Publisher" "ARIAMIR"
-  WriteRegStr HKCU "${UNKEY}" "URLInfoAbout" "https://biomaze.ir"
+  WriteRegStr HKCU "${UNKEY}" "URLInfoAbout" "https://github.com/irariamir/Mazey"
   WriteRegStr HKCU "${UNKEY}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
   WriteRegDWORD HKCU "${UNKEY}" "NoModify" 1
   WriteRegDWORD HKCU "${UNKEY}" "NoRepair" 1

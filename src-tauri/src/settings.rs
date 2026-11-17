@@ -19,7 +19,7 @@ fn defaults() -> Map<String, Value> {
         "autoHide": true, "dndHint": false, "toured": false, "calendar": "shamsi-fa", "hideVideo": true,
         "copyPreview": true, "clipHistory": true, "deviceAlerts": true, "downloadAlerts": true, "shelf": true, "visuals": true,
         "notifSeconds": 4,          // how long a notification stays on the pill
-        "face": "eyes",             // living eyes like Peeky; maze mark / clock in settings
+        "face": "eyes",             // living eyes; maze mark / clock in settings
         "noteHotkey": true,         // Ctrl+Alt+N opens the quick note from anywhere
         "vaultLength": 18, "vaultSymbols": true, "lastUser": "",
         "skin": "everest",
@@ -149,11 +149,6 @@ pub fn set_autostart(on: bool) {
 /// The installed copy starts with Windows unless the user switched that off. Checked on every launch, so it
 /// heals itself if an installer or a cleaner removed the entry (or the app moved to a new folder).
 pub fn ensure_autostart() {
-    if packaged() {
-        unsafe {
-            let _ = RegDeleteKeyValueW(HKEY_CURRENT_USER, &HSTRING::from(RUN_KEY), &HSTRING::from(sys::OLD_NAME));
-        }
-    }
     if packaged() && get("autoStart") != Value::Bool(false) && !autostart_on() {
         set_autostart(true);
         sys::log(&format!("start-with-Windows entry written -> {}", autostart_on()));

@@ -47,6 +47,15 @@ jobs:
           "VERSION=$version" >> $env:GITHUB_ENV
           Get-ChildItem dist | Format-Table Name, Length
 
+      - name: Sign the installer
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          MAZEY_SIGN_KEY: ${{ secrets.MAZEY_SIGN_KEY }}
+        shell: pwsh
+        run: |
+          if (-not $env:MAZEY_SIGN_KEY) { Write-Host "no MAZEY_SIGN_KEY, skip sign"; exit 0 }
+          node installer/sign.mjs dist/Mazey-Setup.exe
+
       - uses: actions/upload-artifact@v4
         with:
           name: Mazey-Windows-${{ env.VERSION }}

@@ -12,25 +12,22 @@
 
 <div dir="rtl">
 
-## دانلود — نسخه ۱.۰.۱
+## دانلود — نسخه ۱.۰.۲
 
-فایل‌ها در [Releases / v1.0.1](https://github.com/irariamir/Mazey/releases/latest) هستند. الان **Latest** همان ۱.۰.۱ است.
+فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند. **Latest** الان ۱.۰.۲ است.
 
-- **[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** — نصب معمولی. فقط همین کاربر ویندوز، بدون Admin. بیشتر افراد همین را بردارند.
+- **[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** — نصب معمولی. فقط همین کاربر، بدون Admin. بیشتر افراد همین را بردارند.
 - **[Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)** — نصب نمی‌خواهد؛ مستقیم اجرا می‌شود.
 - **[Mazey-Windows.zip](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Windows.zip)** — خودِ برنامه داخل زیپ.
 
-`latest.json` مال آپدیتر داخل برنامه است؛ لازم نیست دستی دانلود شود.
+ویندوز ۱۰ یا ۱۱، با WebView2 (روی ویندوز ۱۱ هست). اگر SmartScreen آمد: More info → Run anyway.
 
-ویندوز ۱۰ یا ۱۱. اگر SmartScreen آمد: More info → Run anyway.
+اگر نسخهٔ قدیمی‌تر نصب است، از منوی مازِی **بررسی آپدیت** را بزن.
 
-اگر نسخهٔ **۱.۰.۰** را قبلاً نصب کرده‌ای، از منوی مازِی **بررسی آپدیت** را بزن تا ۱.۰.۱ بیاید.
+### چه چیزی عوض شد
 
-### ۱.۰.۱ نسبت به ۱.۰.۰
-
-- کلیک ساعت/تاریخ جزیره را حدود ۱۰ ثانیه باز نگه می‌دارد.
-- متن نصب‌کننده انگلیسی و خواناست.
-- بررسی آپدیت به همین ریپو وصل شد.
+- **۱.۰.۲** لینک بعد از آپدیت درست شد؛ تنظیمات برنامه قاطی نمی‌شود؛ راهنمای دکمهٔ ماز با رفتار واقعی یکی است.
+- **۱.۰.۱** ساعت حدود ۱۰ ثانیه باز می‌ماند؛ نصب‌کننده انگلیسی است؛ بررسی آپدیت به همین ریپو وصل شد.
 
 ## امکانات
 
@@ -42,8 +39,9 @@
 - رمز می‌سازد و با حساب ویندوز قفل می‌کند.
 - خواندن متن صفحه با `Ctrl+Alt+T`. فارسی و انگلیسی.
 - تایمر درس تا آخر روی صفحه می‌ماند.
-- دکمهٔ ماز یک جمله می‌گوید و بعد از چند ثانیه می‌رود.
+- دکمهٔ ماز یک جمله می‌گوید و بعد از حدود ۱۰ ثانیه می‌رود.
 - تم پیش‌فرض اورست است. تم آریامیر هم هست.
+- نقطه وقتی میکروفون یا دوربین روشن است؛ خط وقتی نت یا VPN عوض می‌شود.
 
 ## حریم خصوصی
 
@@ -59,12 +57,17 @@
 
 ## ساختن
 
+Rust و NSIS لازم است. از ریشهٔ ریپو:
+
 ```
 cd src-tauri
 cargo build --release
-makensis /DVERSION=1.0.1 installer/island.nsi
+cd ..
+makensis /DVERSION=1.0.2 installer/island.nsi
 ```
 
-مجوز MIT.
+هر پوش روی [Actions](.github/workflows/build.yml) بیلد می‌شود. تگ `vX.Y.Z` ریلیز می‌کند.
+
+مجوز [MIT](LICENSE). Tesseract فارسی داخل برنامه است (Apache 2.0).
 
 </div>
