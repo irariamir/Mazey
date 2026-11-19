@@ -6,3 +6,4 @@ node_modules/
 .ssh/
 .DS_Store
 /preview/
+docs/prompt-intro-video.md
