@@ -6,9 +6,9 @@
 
 برای بچه‌های [گروه آموزشی ماز](https://biomaze.ir).
 
-<video src="docs/intro.mp4" width="720" controls playsinline></video>
+[![ویدیو معرفی مازی](docs/hero.jpg)](https://drive.google.com/file/d/1nKa4eej2rFJGPxn4VIomzGkv7oz8TdwW/view)
 
-[ویدیو معرفی — ۴۸ ثانیه](docs/intro.mp4)
+[پخش ویدیو — ۴۸ ثانیه](https://drive.google.com/file/d/1nKa4eej2rFJGPxn4VIomzGkv7oz8TdwW/view)
 
 </div>
 
