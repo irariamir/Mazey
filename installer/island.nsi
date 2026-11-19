@@ -1,4 +1,4 @@
-; Mazey — per-user installer. /S is silent (how updates arrive).
+; Mazey
 Unicode true
 !include "MUI2.nsh"
 !include "LogicLib.nsh"

@@ -1,4 +1,4 @@
-// Settings (one small JSON file) and the "Start with Windows" entry.
+// settings.json + Start with Windows
 use std::ffi::c_void;
 use std::sync::Mutex;
 
@@ -18,9 +18,9 @@ fn defaults() -> Map<String, Value> {
     json!({
         "autoHide": true, "alwaysShow": false, "dndHint": false, "toured": false, "calendar": "shamsi-fa", "hideVideo": true,
         "copyPreview": true, "clipHistory": true, "deviceAlerts": true, "downloadAlerts": true, "shelf": true, "visuals": true,
-        "notifSeconds": 4,          // how long a notification stays on the pill
-        "face": "eyes",             // living eyes; maze mark / clock in settings
-        "noteHotkey": true,         // Ctrl+Alt+N opens the quick note from anywhere
+        "notifSeconds": 4,
+        "face": "eyes",
+        "noteHotkey": true,
         "vaultLength": 18, "vaultSymbols": true, "lastUser": "",
         "skin": "everest",
         "musicTheme": "everest",

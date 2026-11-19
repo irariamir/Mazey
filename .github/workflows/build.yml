@@ -1,7 +1,5 @@
 name: build
 
-# هر پوش، اپ ویندوز را می‌سازد. تگ مثل v1.0.0 ریلیز می‌کند:
-# نصب‌کننده، exe پرتابل، zip و latest.json
 on:
   push:
     branches: [main]
@@ -11,6 +9,23 @@ permissions:
   contents: read
 
 jobs:
+  notes:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const rels = await github.paginate(github.rest.repos.listReleases, { owner, repo });
+            for (const r of rels) {
+              if (r.body) {
+                await github.rest.repos.updateRelease({ owner, repo, release_id: r.id, body: '' });
+              }
+            }
+
   windows:
     runs-on: windows-latest
     permissions:
@@ -67,5 +82,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: مازی ${{ env.VERSION }}
-          body_path: docs/release-notes.md
+          body: ''
           files: dist/*
