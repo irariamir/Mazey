@@ -312,6 +312,12 @@ body.venom #i-face i { width: 12px; height: 10px; border-radius: 0; clip-path: p
 body.venom #i-face i:last-child { clip-path: polygon(100% 0, 0 50%, 18% 100%, 88% 78%); }
 body.venom #i-face.happy i, body.venom #i-face.sleepy i { border: 0; background: #fff; height: 5px; }
 .sw-venom { background: radial-gradient(circle at 32% 30%, #e6eaf2 0 9%, #3a3d47 22%, #000 60%); }
+.sw-tar { background: radial-gradient(circle at 32% 30%, #c45a48 0 8%, #3a0a10 24%, #000 62%); }
+body.tar #island { box-shadow: none; }
+body.tar #i-face { gap: 7px; }
+body.tar #i-face i { width: 11px; height: 5px; border-radius: 50%; background: #fff; clip-path: none; }
+body.tar #i-face i:last-child { clip-path: none; }
+body.tar #i-face.blink i, body.tar #i-face.wink i:last-child { height: 2px; }
 .sws { gap: 4px; }
 .sws button { width: 17px; height: 17px; }
 

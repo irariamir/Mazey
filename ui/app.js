@@ -84,7 +84,7 @@ const st = {
   // and stays that way until the user switches back to the track
   menuMode: false,
   // settings
-  autoHide: true, hideVideo: true, calendar: 'shamsi-fa', deviceAlerts: true, shelfOn: true, visuals: true,
+  autoHide: true, hideVideo: true, alwaysShow: false, calendar: 'shamsi-fa', deviceAlerts: true, shelfOn: true, visuals: true,
   // auto-hide: tuck above the screen edge while an app window sits underneath (always for fullscreen apps)
   covered: false, full: false, tucked: false, peekSince: 0, revealUntil: 0,
   typing: false, holdUntil: 0,                     // a text field is open on the pill / something opened from outside stays put
@@ -130,7 +130,7 @@ function pickView() {
 const dragging = () => st.shelfOn && Date.now() - st.dragAt < 350;
 function updateTuck() {
   const now = Date.now();
-  const want = !st.force && (st.full || (st.autoHide && st.covered));
+  const want = !st.alwaysShow && !st.force && (st.full || (st.autoHide && st.covered));
   // dwelling on the very top edge of the screen peeks the island back out
   if (want && st.tucked && st.peekSince && now - st.peekSince > 220) { st.revealUntil = now + 1400; st.peekSince = 0; }
   const reveal = st.notif || now < st.volUntil || now < st.hudUntil || dragging() || st.dragOut || st.scrubbing || st.hover || st.typing || timer.running || (st.shelfOn && st.shelf.length && !st.full) || st.stackOpen || st.manual === 'gen' || now < st.revealUntil || now < st.holdUntil || (!st.tucked && now - st.leftAt < 900);   // a running timer stays on screen, fullscreen or not
@@ -629,6 +629,7 @@ const THEMES = {
   ember: { name: 'اخگر', pal: ['#a8081d', '#dc1230', '#ff4a3d'] },
   reactor: { name: 'راکتور', pal: ['#2f8f12', '#6fd61f', '#b6ff3a'] },
   venom: { name: 'ونوم', pal: ['#3a3d47', '#8a8f9c', '#e6eaf2'] },
+  tar: { name: 'قیر', pal: ['#1a0408', '#5a1018', '#c45a48'] },
   cloud: { name: 'ابر', pal: ['#7f93b3', '#b9c8e0', '#ffffff'] },
   water: { name: 'آب', pal: ['#0b5fd6', '#1aa6e8', '#5fe0e6'] },
   lava: { name: 'گدازه', pal: ['#e02a0c', '#ff7a18', '#ffd24a'] },
@@ -903,6 +904,7 @@ const LIQ = {
   ember: { bg: [12, 2, 4], lo: [150, 8, 22], hi: [255, 52, 40], spec: [255, 200, 170], thr: 0.78, speed: 1 },
   crystal: { bg: [9, 8, 46], lo: [44, 48, 205], hi: [140, 105, 255], spec: [236, 232, 255], thr: 0.45, speed: 0.8 },
   venom: { bg: [0, 0, 1], lo: [14, 15, 19], hi: [38, 41, 50], spec: [150, 156, 170], thr: 0.62, speed: 0.55 },
+  tar: { bg: [8, 1, 2], lo: [48, 6, 10], hi: [110, 18, 22], spec: [200, 90, 70], thr: 0.56, speed: 0.48 },
 };
 function paintLiquid(g, t, x0, x1, W, A, P) {
   const d = fimg.data, tt = t * 0.00042 * P.speed, scroll = t * 0.014 * P.speed;
@@ -1029,7 +1031,7 @@ function drawGoo(t, dt, on, live) {
   if (!gooOn) { gooOn = true; goo.style.opacity = 1; }
   const g = gooG, W = island.clientWidth, cx = goo.width / 2;
   g.clearRect(0, 0, goo.width, goo.height);
-  g.fillStyle = '#000';
+  g.fillStyle = lookNow === 'tar' ? '#140306' : '#000';
   // the outline itself is a slow wave all the way round, so no straight edge is left however wide the pill is
   const L = 2 * Math.max(0, W - SKY_H) + Math.PI * SKY_H;
   g.beginPath();
@@ -1195,9 +1197,9 @@ function drawIce(t, dt, on, live) {
 // whichever of these the current skin needs; the rest are switched off first so two never share the canvas
 let aura = null;
 function drawAura(t, dt, live) {
-  const want = !st.tucked && skyA > 0.5 && ['venom', 'cloud', 'water', 'lava', 'ice'].includes(lookNow) ? lookNow : null;
-  if (want !== aura) { drawGoo(t, 0, false); drawCloud(t, 0, false); drawBody(t, 0, null); drawIce(t, 0, false); aura = want; document.body.classList.toggle('scene', !!want); document.body.classList.toggle('venom', want === 'venom'); }
-  if (want === 'venom') drawGoo(t, dt, true, live);
+  const want = !st.tucked && skyA > 0.5 && ['venom', 'tar', 'cloud', 'water', 'lava', 'ice'].includes(lookNow) ? lookNow : null;
+  if (want !== aura) { drawGoo(t, 0, false); drawCloud(t, 0, false); drawBody(t, 0, null); drawIce(t, 0, false); aura = want; document.body.classList.toggle('scene', !!want); document.body.classList.toggle('venom', want === 'venom'); document.body.classList.toggle('tar', want === 'tar'); }
+  if (want === 'venom' || want === 'tar') drawGoo(t, dt, true, live);
   else if (want === 'cloud') drawCloud(t, dt, true, live);
   else if (want === 'ice') drawIce(t, dt, true, live);
   else if (want) drawBody(t, dt, want, live);
@@ -1900,9 +1902,10 @@ const SETTINGS_UI = [
   ['toggle', 'autoUpdate', 'Update خودکار'],
   ['seg', 'face', 'Resting', [['eyes', 'Eyes'], ['clock', 'Clock'], ['mark', 'ماز']]],
   ['seg', 'calendar', 'Date', [['gregorian', 'Greg.'], ['shamsi', 'Shamsi'], ['shamsi-fa', 'شمسی'], ['both', 'Both']]],
+  ['toggle', 'alwaysShow', 'همیشه بالا بماند'],
   ['toggle', 'autoHide', 'Hide وقتی پنجره زیرشه'],
   ['toggle', 'hideVideo', 'Hide روی فیلم و بازی'],
-  ['swatch', 'skin', 'Theme', ['everest', 'ariamir', 'black', 'nebula', 'crystal', 'ember', 'reactor', 'venom', 'cloud', 'water', 'lava', 'ice', 'summit', 'dawn', 'night']],
+  ['swatch', 'skin', 'Theme', ['everest', 'ariamir', 'black', 'nebula', 'crystal', 'ember', 'reactor', 'venom', 'tar', 'cloud', 'water', 'lava', 'ice', 'summit', 'dawn', 'night']],
   ['toggle', 'musicReact', 'Theme با آهنگ'],
   ['toggle', 'visuals', 'Night sky با موزیک'],
   ['step', 'notifSeconds', 'Notification stays', 2, 10, 's'],
@@ -2093,11 +2096,12 @@ const applySettings = (s) => {
   if (!s) return;
   st.autoHide = s.autoHide !== false;
   st.hideVideo = s.hideVideo !== false;
+  st.alwaysShow = s.alwaysShow === true;
   st.notifMs = clamp(Number(s.notifSeconds) || 4, 2, 15) * 1000;
   st.deviceAlerts = s.deviceAlerts !== false;
   st.shelfOn = s.shelf !== false;
   st.visuals = s.visuals !== false;
-  st.skin = ['nebula', 'crystal', 'ember', 'reactor', 'venom', 'cloud', 'water', 'lava', 'ice', 'everest', 'summit', 'dawn', 'night', 'ariamir'].includes(s.skin) ? s.skin : (s.skin === 'black' ? 'black' : 'everest');
+  st.skin = ['nebula', 'crystal', 'ember', 'reactor', 'venom', 'tar', 'cloud', 'water', 'lava', 'ice', 'everest', 'summit', 'dawn', 'night', 'ariamir'].includes(s.skin) ? s.skin : (s.skin === 'black' ? 'black' : 'everest');
   st.musicTheme = THEMES[s.musicTheme] ? s.musicTheme : 'everest';
   st.smartCopy = s.smartCopy !== false;
   st.react = s.musicReact !== false;

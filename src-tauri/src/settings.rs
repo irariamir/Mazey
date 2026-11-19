@@ -10,13 +10,13 @@ use windows::Win32::System::Registry::*;
 use crate::sys;
 
 static SETTINGS: Mutex<Option<Map<String, Value>>> = Mutex::new(None);
-const THEMES: [&str; 15] = ["black", "nebula", "crystal", "ember", "reactor", "venom", "cloud", "water", "lava", "ice", "everest", "summit", "dawn", "night", "ariamir"];
-const BOOLS: [&str; 15] = ["autoUpdate", "musicReact", "netAlerts", "sensorDot", "smartCopy", "autoHide", "hideVideo", "copyPreview", "clipHistory", "deviceAlerts", "downloadAlerts", "shelf", "visuals", "noteHotkey", "vaultSymbols"];
+const THEMES: [&str; 16] = ["black", "nebula", "crystal", "ember", "reactor", "venom", "tar", "cloud", "water", "lava", "ice", "everest", "summit", "dawn", "night", "ariamir"];
+const BOOLS: [&str; 16] = ["autoUpdate", "musicReact", "netAlerts", "sensorDot", "smartCopy", "autoHide", "hideVideo", "alwaysShow", "copyPreview", "clipHistory", "deviceAlerts", "downloadAlerts", "shelf", "visuals", "noteHotkey", "vaultSymbols"];
 const CALENDARS: [&str; 4] = ["gregorian", "shamsi", "shamsi-fa", "both"];
 
 fn defaults() -> Map<String, Value> {
     json!({
-        "autoHide": true, "dndHint": false, "toured": false, "calendar": "shamsi-fa", "hideVideo": true,
+        "autoHide": true, "alwaysShow": false, "dndHint": false, "toured": false, "calendar": "shamsi-fa", "hideVideo": true,
         "copyPreview": true, "clipHistory": true, "deviceAlerts": true, "downloadAlerts": true, "shelf": true, "visuals": true,
         "notifSeconds": 4,          // how long a notification stays on the pill
         "face": "eyes",             // living eyes; maze mark / clock in settings

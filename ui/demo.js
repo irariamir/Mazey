@@ -7,11 +7,11 @@ const on = (ev) => (cb) => { (listeners[ev] || (listeners[ev] = [])).push(cb); }
 const emit = (ev, payload) => (listeners[ev] || []).forEach((cb) => { try { cb(payload); } catch (e) { console.warn(e); } });
 const KEY = 'mazey-settings-v11';
 const defaults = {
-  autoHide: false, dndHint: true, toured: false, calendar: 'shamsi-fa', hideVideo: true,
+  autoHide: false, alwaysShow: false, dndHint: true, toured: false, calendar: 'shamsi-fa', hideVideo: true,
   copyPreview: true, clipHistory: true, deviceAlerts: true, downloadAlerts: true, shelf: true, visuals: true,
   notifSeconds: 4, face: 'eyes', noteHotkey: true, vaultLength: 18, vaultSymbols: true, lastUser: '',
   skin: 'everest', musicTheme: 'everest', netAlerts: true, sensorDot: true, smartCopy: true, musicReact: true,
-  autoUpdate: false, autoStartOn: false, version: '1.0.3', appName: 'مازِی',
+  autoUpdate: false, autoStartOn: false, version: '1.0.4', appName: 'مازی',
 };
 let settings = { ...defaults };
 try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch {}

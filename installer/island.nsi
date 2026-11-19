@@ -3,7 +3,7 @@ Unicode true
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !ifndef VERSION
-  !define VERSION "1.0.3"
+  !define VERSION "1.0.4"
 !endif
 !define NAME "Mazey"
 !define EXE "Mazey.exe"
