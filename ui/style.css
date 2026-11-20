@@ -268,6 +268,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .row.set .num { width: 26px; text-align: center; font-variant-numeric: tabular-nums; }
 .row.set .go { height: 22px; padding: 0 10px; border-radius: 11px; background: rgba(255, 255, 255, .12); font-size: 11px; }
 .row.set .go:hover { background: #fff; color: #000; }
+.row.set.tools { height: auto; min-height: 34px; padding: 7px 10px; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.row.set.tools .tb { width: 28px; height: 28px; border-radius: 14px; display: grid; place-items: center; color: rgba(255, 255, 255, .38); background: rgba(255, 255, 255, .06); transition: background .15s, color .15s, transform .2s var(--spring); }
+.row.set.tools .tb svg { width: 15px; height: 15px; }
+.row.set.tools .tb.on { color: #000; background: #fff; }
+.row.set.tools .tb:hover { transform: scale(1.08); }
 /* ------------------------------------------------ skins, status dots, clickable status line */
 #island.sky .view { text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
 .glyph.red { color: #ff5d6c; }

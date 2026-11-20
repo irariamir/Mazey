@@ -93,7 +93,7 @@ const st = {
   face: 'eyes', settings: {}, notes: [], vault: { items: [] }, ctx: {}, lastUser: '',
   vaultQ: '', vaultSel: 0,                         // the search over saved passwords, and the row Enter would copy
   gen: { pass: '', len: 18, symbols: true },
-  tools: {},
+  tools: {}, toolsOpen: false,
   skin: 'everest', musicTheme: 'everest',
   net: { online: true, vpn: '', proxy: false }, sensors: { mic: [], cam: [] },
   smartCopy: true, hudAct: null, muteClipUntil: 0, react: true,
@@ -2101,17 +2101,25 @@ function renderSettings() {
     }
     stackList.appendChild(row);
   });
-  const th = document.createElement('div'); th.className = 'row empty wide'; th.textContent = 'دکمه‌های جزیره';
-  stackList.appendChild(th);
-  TOOL_BTNS.forEach(([id, label, icon], i) => {
-    const row = document.createElement('div'); row.className = 'row set'; row.style.setProperty('--i', Math.min(i, 6));
-    const ic = document.createElement('div'); ic.className = 'ic plain'; ic.innerHTML = svg(icon);
-    const l = document.createElement('span'); l.className = 'lbl'; l.textContent = label;
-    const sw = document.createElement('button'); sw.className = 'sw' + (toolOn(id) ? ' on' : '');
-    sw.addEventListener('click', () => { const on = !toolOn(id); sw.classList.toggle('on', on); setTool(id, on); });
-    row.append(ic, l, sw);
-    stackList.appendChild(row);
-  });
+  const head = document.createElement('div'); head.className = 'row set';
+  const hic = document.createElement('div'); hic.className = 'ic plain'; hic.innerHTML = svg('edit');
+  const hl = document.createElement('span'); hl.className = 'lbl'; hl.textContent = 'دکمه‌های جزیره';
+  const hb = document.createElement('button'); hb.className = 'go'; hb.textContent = st.toolsOpen ? 'بستن' : 'ویرایش';
+  hb.addEventListener('click', () => { st.toolsOpen = !st.toolsOpen; const y = stackList.scrollTop; renderStack(); stackList.scrollTop = y; });
+  head.append(hic, hl, hb);
+  stackList.appendChild(head);
+  if (st.toolsOpen) {
+    const box = document.createElement('div'); box.className = 'row set tools';
+    TOOL_BTNS.forEach(([id, label, icon]) => {
+      const bt = document.createElement('button');
+      bt.className = 'tb' + (toolOn(id) ? ' on' : '');
+      bt.title = label;
+      bt.innerHTML = svg(icon);
+      bt.addEventListener('click', () => { setTool(id, !toolOn(id)); const y = stackList.scrollTop; renderStack(); stackList.scrollTop = y; });
+      box.appendChild(bt);
+    });
+    stackList.appendChild(box);
+  }
   const info = document.createElement('div'); info.className = 'row set info';
   info.textContent = (s.appName || 'مازِی') + ' ' + (s.version || '');
   const up = document.createElement('button'); up.className = 'go'; up.textContent = st.update ? 'Install ' + st.update : 'Check update';
