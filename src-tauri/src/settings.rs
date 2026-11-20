@@ -150,6 +150,20 @@ pub fn apply(key: &str, value: &Value) {
             }
             put("timer", Value::Object(cur));
         }
+        "tools" => {
+            let Some(v) = value.as_object() else { return };
+            const keys: [&str; 9] = ["play", "screenshot", "ocr", "clips", "notes", "vault", "maze", "timer", "inbox"];
+            let mut cur = match get("tools") {
+                Value::Object(m) => m,
+                _ => Map::new(),
+            };
+            for k in keys {
+                if let Some(b) = v.get(k).and_then(|x| x.as_bool()) {
+                    cur.insert(k.into(), b.into());
+                }
+            }
+            put("tools", Value::Object(cur));
+        }
         _ if BOOLS.contains(&key) => put(key, value.as_bool().unwrap_or(false).into()),
         _ => return,
     }

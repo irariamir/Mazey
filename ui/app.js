@@ -93,6 +93,7 @@ const st = {
   face: 'eyes', settings: {}, notes: [], vault: { items: [] }, ctx: {}, lastUser: '',
   vaultQ: '', vaultSel: 0,                         // the search over saved passwords, and the row Enter would copy
   gen: { pass: '', len: 18, symbols: true },
+  tools: {},
   skin: 'everest', musicTheme: 'everest',
   net: { online: true, vpn: '', proxy: false }, sensors: { mic: [], cam: [] },
   smartCopy: true, hudAct: null, muteClipUntil: 0, react: true,
@@ -710,6 +711,7 @@ function onMedia(m) {
   const icon = st.media.playing ? 'pause' : 'play';
   setIcon($('#b-play'), icon); setIcon($('#t-play'), icon);
   $('#t-play').classList.toggle('hidden', !st.media.active);
+  paintTools();
   $('#t-track').classList.toggle('hidden', !(st.menuMode && musicOn()));
   render();
 }
@@ -2015,6 +2017,36 @@ const SETTINGS_UI = [
   ['toggle', 'smartCopy', 'Smart copy'],
   ['toggle', 'noteHotkey', 'Ctrl+Alt+N note · Ctrl+Alt+T OCR'],
 ];
+const TOOL_BTNS = [
+  ['play', 'پخش آهنگ', 'note'],
+  ['screenshot', 'اسکرین‌شات', 'shot'],
+  ['ocr', 'خواندن متن', 'scan'],
+  ['clips', 'تاریخچهٔ کپی', 'clipboard'],
+  ['notes', 'یادداشت', 'jot'],
+  ['vault', 'رمزها', 'key'],
+  ['maze', 'جملهٔ ماز', 'maze'],
+  ['timer', 'تایمر درس', 'timer'],
+  ['inbox', 'نوتیفیکیشن', 'bell'],
+];
+const TOOL_SEL = {
+  play: '#t-play', screenshot: '[data-act="screenshot"]', ocr: '[data-act="ocr"]',
+  clips: '#t-clips', notes: '#t-notes', vault: '#t-vault', maze: '[data-act="maze"]',
+  timer: '[data-act="timer"]', inbox: '#t-inbox',
+};
+function toolOn(id) { return !st.tools || st.tools[id] !== false; }
+function paintTools() {
+  for (const [id, sel] of Object.entries(TOOL_SEL)) {
+    const el = $(sel); if (el) el.classList.toggle('userhide', !toolOn(id));
+  }
+}
+function setTool(id, on) {
+  const next = { ...(st.tools || {}) };
+  TOOL_BTNS.forEach(([k]) => { if (next[k] === undefined) next[k] = true; });
+  next[id] = on;
+  st.tools = next;
+  paintTools();
+  window.qazi.setSetting('tools', next);
+}
 function renderSettings() {
   $('#stack-clear').classList.add('hidden');
   const s = st.settings || {};
@@ -2067,6 +2099,17 @@ function renderSettings() {
       const bt = document.createElement('button'); bt.className = 'go'; bt.textContent = a; bt.addEventListener('click', () => { if (key === 'tour') setStack(true, 'tour'); else window.qazi.action(key); });
       row.appendChild(bt);
     }
+    stackList.appendChild(row);
+  });
+  const th = document.createElement('div'); th.className = 'row empty wide'; th.textContent = 'دکمه‌های جزیره';
+  stackList.appendChild(th);
+  TOOL_BTNS.forEach(([id, label, icon], i) => {
+    const row = document.createElement('div'); row.className = 'row set'; row.style.setProperty('--i', Math.min(i, 6));
+    const ic = document.createElement('div'); ic.className = 'ic plain'; ic.innerHTML = svg(icon);
+    const l = document.createElement('span'); l.className = 'lbl'; l.textContent = label;
+    const sw = document.createElement('button'); sw.className = 'sw' + (toolOn(id) ? ' on' : '');
+    sw.addEventListener('click', () => { const on = !toolOn(id); sw.classList.toggle('on', on); setTool(id, on); });
+    row.append(ic, l, sw);
     stackList.appendChild(row);
   });
   const info = document.createElement('div'); info.className = 'row set info';
@@ -2205,6 +2248,8 @@ const applySettings = (s) => {
   st.face = s.face === 'clock' ? 'clock' : s.face === 'mark' ? 'mark' : 'eyes';
   st.settings = s; st.lastUser = s.lastUser || '';
   st.gen.len = Number(s.vaultLength) || 18; st.gen.symbols = s.vaultSymbols !== false;
+  st.tools = (s.tools && typeof s.tools === 'object') ? s.tools : {};
+  paintTools();
   if (!timer.ready) hydrateTimer(s.timer);
   if (st.stackOpen && st.stackKind === 'settings') { const y = stackList.scrollTop; renderStack(); stackList.scrollTop = y; }
   tick(); render();

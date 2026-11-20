@@ -20,9 +20,9 @@
 
 <div dir="rtl">
 
-## دانلود — نسخه ۱.۰.۵
+## دانلود — نسخه ۱.۰.۶
 
-فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند. **Latest** الان ۱.۰.۵ است.
+فایل‌ها در [Releases](https://github.com/irariamir/Mazey/releases/latest) هستند. **Latest** الان ۱.۰.۶ است.
 
 - **[Mazey-Setup.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Setup.exe)** — نصب معمولی. فقط همین کاربر، بدون Admin. بیشتر افراد همین را بردارند.
 - **[Mazey-Portable.exe](https://github.com/irariamir/Mazey/releases/latest/download/Mazey-Portable.exe)** — نصب نمی‌خواهد؛ مستقیم اجرا می‌شود.
@@ -66,7 +66,7 @@ Rust و NSIS لازم است. از ریشهٔ ریپو:
 cd src-tauri
 cargo build --release
 cd ..
-makensis /DVERSION=1.0.5 installer/island.nsi
+makensis /DVERSION=1.0.6 installer/island.nsi
 ```
 
 هر پوش روی [Actions](.github/workflows/build.yml) بیلد می‌شود. تگ `vX.Y.Z` ریلیز می‌کند.
