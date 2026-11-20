@@ -162,6 +162,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 [data-view="timer"] { padding: 0 6px 0 12px; gap: 6px; }
 #tm-time { font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 46px; text-align: center; }
 #tm-time.done { color: #ff6b6b; }
+#tm-glyph { cursor: pointer; }
+#tm-name { max-width: 72px; overflow: hidden; text-overflow: ellipsis; font-size: 11px; cursor: pointer; }
+#tm-name.set { color: #fff; }
+#tm-n { font-size: 11px; font-variant-numeric: tabular-nums; min-width: 0; }
 
 /* tiny inline message (e.g. picked color) */
 #flash { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 7px; background: #000; font-weight: 600; font-size: 12.5px; opacity: 0; pointer-events: none; transition: opacity .2s; white-space: nowrap; }

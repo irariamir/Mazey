@@ -104,7 +104,11 @@ function syncMouse(force) {
   if (force || want !== mouseSent) { mouseSent = want; window.qazi.setInteractive(want); }
 }
 setInterval(() => syncMouse(true), 500);      // repeated, so one lost message can never leave the pill unclickable
-const timer = { left: 25 * 60000, endAt: 0, running: false, done: false };
+const timer = {
+  workMin: 25, breakMin: 5, kind: 'work', name: '',
+  left: 25 * 60000, endAt: 0, running: false, done: false,
+  day: '', today: 0, ready: false, dirty: false,
+};
 const views = Object.fromEntries($$('.view').map((v) => [v.dataset.view, v]));
 let cur = 'idle';
 
@@ -1365,13 +1369,82 @@ $('#i-time').addEventListener('click', () => {
   render();
 });
 const mmss = (ms) => { const s = Math.ceil(ms / 1000), h = Math.floor(s / 3600); return (h ? h + ':' : '') + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60); };
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+function rollDay() {
+  const k = todayKey();
+  if (timer.day !== k) { timer.day = k; timer.today = 0; }
+}
+function kindMin() { return timer.kind === 'break' ? timer.breakMin : timer.workMin; }
+function timerSnap() {
+  return {
+    workMin: timer.workMin, breakMin: timer.breakMin, kind: timer.kind, name: timer.name,
+    left: timer.running ? Math.max(0, timer.endAt - Date.now()) : timer.left,
+    endAt: timer.running ? timer.endAt : 0, running: timer.running, done: timer.done,
+    day: timer.day, today: timer.today,
+  };
+}
+let timerSaveT = 0;
+function saveTimer() {
+  timer.dirty = true;
+  clearTimeout(timerSaveT);
+  timerSaveT = setTimeout(() => { window.qazi.setSetting('timer', timerSnap()); }, 200);
+}
+function paintTimerChrome() {
+  const g = $('#tm-glyph');
+  g.classList.toggle('amber', timer.kind !== 'break');
+  g.classList.toggle('green', timer.kind === 'break');
+  g.title = timer.kind === 'break' ? 'استراحت' : 'درس';
+  const nm = $('#tm-name');
+  const named = !!(timer.name || '').trim();
+  nm.textContent = named ? timer.name.trim() : (timer.kind === 'break' ? 'استراحت' : 'درس');
+  nm.classList.toggle('set', named);
+  $('#tm-n').textContent = timer.today ? String(timer.today) : '';
+}
+function hydrateTimer(o) {
+  if (!o || typeof o !== 'object' || timer.dirty) { timer.ready = true; return; }
+  timer.workMin = clamp(Math.round(Number(o.workMin) || 25), 1, 180);
+  timer.breakMin = clamp(Math.round(Number(o.breakMin) || 5), 1, 180);
+  timer.kind = o.kind === 'break' ? 'break' : 'work';
+  timer.name = String(o.name || '').slice(0, 40);
+  timer.day = String(o.day || '');
+  timer.today = clamp(Math.round(Number(o.today) || 0), 0, 999);
+  rollDay();
+  const now = Date.now();
+  const endAt = Number(o.endAt) || 0;
+  if (o.running && endAt > now + 400) {
+    timer.endAt = endAt; timer.running = true; timer.done = false; timer.left = endAt - now;
+  } else if (o.running && endAt && endAt <= now + 400) {
+    timer.running = false; timer.left = 0; timer.done = true; timer.pendingFinish = true;
+  } else {
+    timer.running = false; timer.done = !!o.done;
+    const left = Number(o.left);
+    timer.left = left > 0 ? left : kindMin() * 60000;
+  }
+  timer.ready = true;
+  paintTimerChrome();
+}
+function completeTimer() {
+  timer.running = false; timer.left = 0; timer.done = true;
+  beep();
+  const name = (timer.name || '').trim();
+  if (timer.kind === 'work') {
+    rollDay(); timer.today = clamp(timer.today + 1, 0, 999);
+    showNotif({ app: 'تایمر', title: name ? name + ' تمام شد' : 'وقت تمام شد. برگرد سر مسیر', body: 'استراحت، اگر خواستی بزن' });
+    timer.kind = 'break'; timer.left = timer.breakMin * 60000; timer.done = false;
+  } else {
+    showNotif({ app: 'تایمر', title: 'استراحت تمام شد', body: name ? 'برگرد به ' + name : 'برگرد سر مسیر' });
+    timer.kind = 'work'; timer.left = timer.workMin * 60000; timer.done = false;
+  }
+  saveTimer(); paintTimerChrome();
+}
 function tick() {
   const d = new Date(), hm = pad(d.getHours()) + ':' + pad(d.getMinutes());
+  if (timer.pendingFinish) { timer.pendingFinish = false; completeTimer(); }
   const left = timer.running ? Math.max(0, timer.endAt - Date.now()) : timer.left;
-  if (timer.running && left <= 0) {
-    timer.running = false; timer.left = 0; timer.done = true;
-    beep(); showNotif({ app: 'تایمر', title: 'وقت تمام شد. برگرد سر مسیر', body: '' });
-  }
+  if (timer.running && left <= 0) completeTimer();
   const it = $('#i-time');
   it.textContent = timer.running ? mmss(left) : hm;
   it.classList.toggle('count', timer.running);
@@ -1440,6 +1513,19 @@ $$('[data-act]').forEach((b) => b.addEventListener('pointerdown', (e) => {
 }));
 
 // ------------------------------------------------------------ timer
+$('#tm-glyph').addEventListener('click', () => {
+  if (timer.running) return;
+  timer.kind = timer.kind === 'break' ? 'work' : 'break';
+  timer.done = false;
+  timer.left = kindMin() * 60000;
+  saveTimer(); paintTimerChrome(); tick();
+});
+$('#tm-name').addEventListener('click', async () => {
+  const r = await ask({ icon: 'timer', placeholder: 'اسم، اگر بخواهی', value: timer.name });
+  if (r === null) return;
+  timer.name = r.trim().slice(0, 40);
+  saveTimer(); paintTimerChrome(); tick(); render();
+});
 function beep() {
   try {
     const ctx = new AudioContext();
@@ -1455,19 +1541,28 @@ function beep() {
   } catch { /* no audio device */ }
 }
 function nudge(dir) {
-  if (timer.running) { timer.endAt = Math.max(Date.now() + 1000, timer.endAt + dir * 60000); return; }
+  if (timer.running) { timer.endAt = Math.max(Date.now() + 1000, timer.endAt + dir * 60000); saveTimer(); return; }
   const min = Math.round(timer.left / 60000);
   const step = (dir > 0 ? min >= 10 : min > 10) ? 5 : 1;
-  timer.left = clamp(min + dir * step, 1, 180) * 60000; timer.done = false;
+  const next = clamp(min + dir * step, 1, 180);
+  timer.left = next * 60000; timer.done = false;
+  if (timer.kind === 'break') timer.breakMin = next; else timer.workMin = next;
+  saveTimer();
 }
 $('#tm-minus').addEventListener('click', () => { nudge(-1); tick(); });
 $('#tm-plus').addEventListener('click', () => { nudge(1); tick(); });
 $('#tm-start').addEventListener('click', () => {
   if (timer.running) { timer.left = Math.max(0, timer.endAt - Date.now()); timer.running = false; }
-  else { if (timer.left <= 0) timer.left = 25 * 60000; timer.done = false; timer.endAt = Date.now() + timer.left; timer.running = true; }
-  tick(); render();
+  else {
+    if (timer.left <= 0 || timer.done) { timer.done = false; timer.left = kindMin() * 60000; }
+    timer.endAt = Date.now() + timer.left; timer.running = true;
+  }
+  saveTimer(); tick(); render();
 });
-$('#tm-reset').addEventListener('click', () => { timer.running = false; timer.done = false; timer.left = 25 * 60000; tick(); render(); });
+$('#tm-reset').addEventListener('click', () => {
+  timer.running = false; timer.done = false; timer.left = kindMin() * 60000;
+  saveTimer(); tick(); render();
+});
 
 // ------------------------------------------------------------ one line of typing on the pill
 // ask() turns the pill into a text field and resolves with what was typed (null = cancelled).
@@ -2110,6 +2205,7 @@ const applySettings = (s) => {
   st.face = s.face === 'clock' ? 'clock' : s.face === 'mark' ? 'mark' : 'eyes';
   st.settings = s; st.lastUser = s.lastUser || '';
   st.gen.len = Number(s.vaultLength) || 18; st.gen.symbols = s.vaultSymbols !== false;
+  if (!timer.ready) hydrateTimer(s.timer);
   if (st.stackOpen && st.stackKind === 'settings') { const y = stackList.scrollTop; renderStack(); stackList.scrollTop = y; }
   tick(); render();
   if (!s.toured && !toured) {        // the first start: say hello and offer the list of what it can do

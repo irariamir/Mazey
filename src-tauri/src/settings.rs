@@ -111,6 +111,45 @@ pub fn apply(key: &str, value: &Value) {
             }
         }
         "dndHint" | "toured" => put(key, true.into()),
+        "timer" => {
+            let Some(v) = value.as_object() else { return };
+            let mut cur = match get("timer") {
+                Value::Object(m) => m,
+                _ => Map::new(),
+            };
+            if let Some(n) = v.get("workMin").and_then(|x| x.as_f64()).map(|n| n.round() as i64).filter(|n| (1..=180).contains(n)) {
+                cur.insert("workMin".into(), n.into());
+            }
+            if let Some(n) = v.get("breakMin").and_then(|x| x.as_f64()).map(|n| n.round() as i64).filter(|n| (1..=180).contains(n)) {
+                cur.insert("breakMin".into(), n.into());
+            }
+            if let Some(k) = v.get("kind").and_then(|x| x.as_str()).filter(|k| *k == "work" || *k == "break") {
+                cur.insert("kind".into(), k.into());
+            }
+            if let Some(s) = v.get("name").and_then(|x| x.as_str()) {
+                let t: String = s.chars().take(40).collect();
+                cur.insert("name".into(), t.into());
+            }
+            if let Some(n) = v.get("left").and_then(|x| x.as_f64()).map(|n| n.round() as i64).filter(|n| (0..=180 * 60_000).contains(n)) {
+                cur.insert("left".into(), n.into());
+            }
+            if let Some(n) = v.get("endAt").and_then(|x| x.as_f64()).map(|n| n.round() as i64).filter(|n| *n >= 0) {
+                cur.insert("endAt".into(), n.into());
+            }
+            if let Some(b) = v.get("running").and_then(|x| x.as_bool()) {
+                cur.insert("running".into(), b.into());
+            }
+            if let Some(b) = v.get("done").and_then(|x| x.as_bool()) {
+                cur.insert("done".into(), b.into());
+            }
+            if let Some(s) = v.get("day").and_then(|x| x.as_str()).filter(|s| s.len() <= 16 && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')) {
+                cur.insert("day".into(), (*s).into());
+            }
+            if let Some(n) = v.get("today").and_then(|x| x.as_f64()).map(|n| n.round() as i64).filter(|n| (0..=999).contains(n)) {
+                cur.insert("today".into(), n.into());
+            }
+            put("timer", Value::Object(cur));
+        }
         _ if BOOLS.contains(&key) => put(key, value.as_bool().unwrap_or(false).into()),
         _ => return,
     }

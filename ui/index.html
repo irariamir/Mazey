@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
 <meta charset="utf-8">
-<title>مازِی</title>
+<title>مازی</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
 
   <!-- idle: just the time (or a running countdown) -->
   <div class="view on" data-view="idle">
-    <span id="i-face"><i></i><i></i></span><span id="i-mark" title="مازِی"><img src="brand/mazey-app.png" alt=""></span><span id="i-time">--:--</span><span id="i-shelf"></span>
+    <span id="i-face"><i></i><i></i></span><span id="i-mark" title="مازی"><img src="brand/mazey-app.png" alt=""></span><span id="i-time">--:--</span><span id="i-shelf"></span>
   </div>
 
   <!-- hover on idle: a one-line tray -->
@@ -93,10 +93,12 @@
 
   <!-- timer -->
   <div class="view" data-view="timer">
-    <span class="glyph amber" data-icon="timer"></span>
+    <span class="glyph amber" id="tm-glyph" data-icon="timer" title="درس"></span>
     <button class="ib small" id="tm-minus" data-icon="minus" title="کمتر"></button>
     <span id="tm-time">25:00</span>
     <button class="ib small" id="tm-plus" data-icon="plus" title="بیشتر"></button>
+    <span id="tm-name" class="dim">درس</span>
+    <span id="tm-n" class="dim"></span>
     <button class="ib solid" id="tm-start" data-icon="play" title="شروع / مکث"></button>
     <button class="ib" id="tm-reset" data-icon="reset" title="از اول"></button>
   </div>

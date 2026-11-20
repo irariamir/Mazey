@@ -11,7 +11,7 @@ const defaults = {
   copyPreview: true, clipHistory: true, deviceAlerts: true, downloadAlerts: true, shelf: true, visuals: true,
   notifSeconds: 4, face: 'eyes', noteHotkey: true, vaultLength: 18, vaultSymbols: true, lastUser: '',
   skin: 'everest', musicTheme: 'everest', netAlerts: true, sensorDot: true, smartCopy: true, musicReact: true,
-  autoUpdate: false, autoStartOn: false, version: '1.0.4', appName: 'مازی',
+  autoUpdate: false, autoStartOn: false, version: '1.0.5', appName: 'مازی',
 };
 let settings = { ...defaults };
 try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch {}
