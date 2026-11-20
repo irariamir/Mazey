@@ -6,6 +6,8 @@
 
 برای بچه‌های [گروه آموزشی ماز](https://biomaze.ir).
 
+<img src="docs/desktop.jpg" alt="مازی" width="800">
+
 [![راهنمای مازی](docs/hero.jpg)](https://drive.google.com/file/d/1riPni94hQKUKCWCEN-Y7DfGRPL1U7lM1/view)
 
 [نسخه کم‌حجم](https://drive.google.com/file/d/1riPni94hQKUKCWCEN-Y7DfGRPL1U7lM1/view)
