@@ -11,7 +11,7 @@ use crate::sys;
 
 static SETTINGS: Mutex<Option<Map<String, Value>>> = Mutex::new(None);
 const THEMES: [&str; 16] = ["black", "nebula", "crystal", "ember", "reactor", "venom", "tar", "cloud", "water", "lava", "ice", "everest", "summit", "dawn", "night", "ariamir"];
-const BOOLS: [&str; 16] = ["autoUpdate", "musicReact", "netAlerts", "sensorDot", "smartCopy", "autoHide", "hideVideo", "alwaysShow", "copyPreview", "clipHistory", "deviceAlerts", "downloadAlerts", "shelf", "visuals", "noteHotkey", "vaultSymbols"];
+const BOOLS: [&str; 17] = ["autoUpdate", "musicReact", "netAlerts", "sensorDot", "smartCopy", "autoHide", "hideVideo", "alwaysShow", "copyPreview", "clipHistory", "deviceAlerts", "downloadAlerts", "shelf", "visuals", "noteHotkey", "vaultSymbols", "islandCalc"];
 const CALENDARS: [&str; 4] = ["gregorian", "shamsi", "shamsi-fa", "both"];
 
 fn defaults() -> Map<String, Value> {
@@ -24,7 +24,7 @@ fn defaults() -> Map<String, Value> {
         "vaultLength": 18, "vaultSymbols": true, "lastUser": "",
         "skin": "everest",
         "musicTheme": "everest",
-        "netAlerts": true, "sensorDot": true, "smartCopy": true, "musicReact": true, "autoUpdate": false,
+        "netAlerts": true, "sensorDot": true, "smartCopy": true, "musicReact": true, "autoUpdate": false, "islandCalc": true,
     })
     .as_object()
     .cloned()

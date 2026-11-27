@@ -96,12 +96,12 @@ const st = {
   tools: {}, toolsOpen: false,
   skin: 'everest', musicTheme: 'everest',
   net: { online: true, vpn: '', proxy: false }, sensors: { mic: [], cam: [] },
-  smartCopy: true, hudAct: null, muteClipUntil: 0, react: true,
+  smartCopy: true, islandCalc: true, hudAct: null, muteClipUntil: 0, react: true,
 };
 // the window takes the mouse only while the cursor is on the island (or a text field is open)
 let mouseSent = null;
 function syncMouse(force) {
-  const want = st.hover || (st.typing && !st.parked) || st.dragOut;
+  const want = st.hover || (st.typing && !st.parked) || st.dragOut || math.keys;
   if (force || want !== mouseSent) { mouseSent = want; window.qazi.setInteractive(want); }
 }
 setInterval(() => syncMouse(true), 500);      // repeated, so one lost message can never leave the pill unclickable
@@ -110,6 +110,7 @@ const timer = {
   left: 25 * 60000, endAt: 0, running: false, done: false,
   day: '', today: 0, ready: false, dirty: false,
 };
+const math = { expr: '', out: '', keys: false };
 const views = Object.fromEntries($$('.view').map((v) => [v.dataset.view, v]));
 let cur = 'idle';
 
@@ -127,7 +128,8 @@ function pickView() {
   if (st.manual) return st.manual;
   if (st.shelfOn && st.shelf.length) return 'held';      // held files stay on the pill until they are taken out
   const m = st.media;
-  if (musicOn() && !st.menuMode && (m.playing || now - st.pausedAt < 12000)) return 'media';
+  if (musicOn() && !st.menuMode && (m.playing || now - st.pausedAt < 12000) && !math.expr) return 'media';
+  if (math.expr) return 'calc';
   if (st.hover && now - st.enteredAt > 130) return 'tools';
   if ((st.hover || now - st.leftAt < 380) && cur === 'tools') return 'tools';
   return 'idle';
@@ -138,7 +140,7 @@ function updateTuck() {
   const want = !st.alwaysShow && !st.force && (st.full || (st.autoHide && st.covered));
   // dwelling on the very top edge of the screen peeks the island back out
   if (want && st.tucked && st.peekSince && now - st.peekSince > 220) { st.revealUntil = now + 1400; st.peekSince = 0; }
-  const reveal = st.notif || now < st.volUntil || now < st.hudUntil || dragging() || st.dragOut || st.scrubbing || st.hover || st.typing || timer.running || (st.shelfOn && st.shelf.length && !st.full) || st.stackOpen || st.manual === 'gen' || now < st.revealUntil || now < st.holdUntil || (!st.tucked && now - st.leftAt < 900);   // a running timer stays on screen, fullscreen or not
+  const reveal = st.notif || now < st.volUntil || now < st.hudUntil || dragging() || st.dragOut || st.scrubbing || st.hover || st.typing || math.keys || math.expr || timer.running || (st.shelfOn && st.shelf.length && !st.full) || st.stackOpen || st.manual === 'gen' || now < st.revealUntil || now < st.holdUntil || (!st.tucked && now - st.leftAt < 900);
   const tucked = !!(want && !reveal);
   island.classList.toggle('full', st.full);
   if (tucked !== st.tucked) {
@@ -159,6 +161,7 @@ function render() {
   if (viz !== st.vizOn) { st.vizOn = viz; window.qazi.setViz(viz); }
   updateTuck();
   if (!st.tucked && st.cx !== undefined) hoverNow();      // the pill may have grown or shrunk under a resting cursor
+  if (st.hover && st.islandCalc && !st.typing && !st.keys && !st.stackOpen && !st.tucked && Date.now() - st.enteredAt > 120) mathArm(true);
   island.classList.toggle('dropping', dragging());
   if (st.tucked) {
     if (island.dataset.w !== 'tuck') { island.dataset.w = 'tuck'; island.style.width = '56px'; }
@@ -203,7 +206,8 @@ function hoverNow() {
   st.hover = inside;
   island.classList.toggle('hover', inside && !st.typing);
   syncMouse();
-  if (inside) st.enteredAt = Date.now(); else st.leftAt = Date.now();
+  if (inside) st.enteredAt = Date.now();
+  else { st.leftAt = Date.now(); mathArm(false); }
   return true;
 }
 
@@ -222,6 +226,52 @@ window.qazi.onPress(({ x, y }) => {
   }, 260);
 });
 window.qazi.onRelease(() => { setTimeout(() => { if (st.scrubbing) endScrub(true); }, 120); });   // a scrub whose mouse-up went elsewhere
+
+function paintMath() {
+  const e = $('#c-expr'), o = $('#c-out');
+  if (e) e.textContent = math.expr || '';
+  if (o) o.textContent = math.out ? '= ' + math.out : '';
+}
+function mathArm(on) {
+  if (!st.islandCalc) on = false;
+  if (on && (st.typing || st.keys || st.stackOpen || st.tucked)) on = false;
+  if (on === math.keys) {
+    if (on) { const c = $('#c-catch'); if (c && document.activeElement !== c) c.focus(); }
+    return;
+  }
+  math.keys = on;
+  if (on) window.qazi.setTyping(true).then(() => { if (math.keys) { const c = $('#c-catch'); if (c) c.focus(); } });
+  else if (!st.typing && !st.keys) {
+    window.qazi.setTyping(false, true);
+    if (!st.hover) {
+      st.holdUntil = Math.max(st.holdUntil || 0, Date.now() + 1600);
+      setTimeout(() => { if (!st.hover && !math.keys) { math.expr = ''; math.out = ''; render(); } }, 1700);
+    }
+  }
+  syncMouse(); render();
+}
+function mathFeed(e) {
+  if (!st.islandCalc || st.typing || st.keys) return;
+  if (!math.keys && !(st.hover && !st.stackOpen)) return;
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  let k = e.key;
+  if (k === '×') k = '*';
+  if (k === '÷') k = '/';
+  if (k === '٫' || k === '，') k = '.';
+  if (/[۰-۹٠-٩]/.test(k)) k = String(faDigits(k));
+  if (k === 'Escape') { e.preventDefault(); math.expr = ''; math.out = ''; paintMath(); render(); return; }
+  if (k === 'Enter' || k === '=') { e.preventDefault(); if (math.out) window.qazi.copy(math.out); return; }
+  if (k === 'Backspace') { e.preventDefault(); math.expr = math.expr.slice(0, -1); }
+  else if (k.length === 1 && /[0-9+\-*/().%^]/.test(k) && math.expr.length < 48) {
+    e.preventDefault();
+    if (!math.keys) mathArm(true);
+    math.expr += k;
+  } else return;
+  const v = calc(math.expr);
+  math.out = v === null ? '' : String(Math.round(v * 1e8) / 1e8);
+  paintMath(); render();
+}
+document.addEventListener('keydown', mathFeed, true);
 
 function bump() { island.classList.remove('bump'); void island.offsetWidth; island.classList.add('bump'); }
 let flashT = 0;
@@ -297,7 +347,7 @@ function paintIcon(el, n) {
 // away from under the cursor: it shows as a small chip beside the pill instead. Click the chip to open it.
 const side = $('#side');
 let sideN = null, sideT = 0;
-const inUse = () => !st.tucked && (st.stackOpen || st.typing || !!st.manual || (st.hover && cur === 'tools'));
+const inUse = () => !st.tucked && (st.stackOpen || st.typing || math.keys || !!st.manual || (st.hover && (cur === 'tools' || cur === 'calc')));
 function placeSide() {
   const w = island.clientWidth;
   side.style.left = `calc(50% + ${w / 2 + 8}px)`;
@@ -504,6 +554,7 @@ function setStack(open, kind) {
   $('#t-speedo').classList.toggle('active', open && st.stackKind === 'speedo');
   if (open && kind === 'speedo') loadLocations();
   if (open && kind === 'vault') window.qazi.vaultList().then(setVault);
+  if (open) mathArm(false);
   if (open) {
     st.manual = 'tools';
     st.hover = true;
@@ -2015,6 +2066,7 @@ const SETTINGS_UI = [
   ['toggle', 'netAlerts', 'Internet و VPN'],
   ['toggle', 'sensorDot', 'Mic / camera'],
   ['toggle', 'smartCopy', 'Smart copy'],
+  ['toggle', 'islandCalc', 'ماشین‌حساب روی جزیره'],
   ['toggle', 'noteHotkey', 'Ctrl+Alt+N note · Ctrl+Alt+T OCR'],
 ];
 const TOOL_BTNS = [
@@ -2250,6 +2302,8 @@ const applySettings = (s) => {
   st.skin = ['nebula', 'crystal', 'ember', 'reactor', 'venom', 'tar', 'cloud', 'water', 'lava', 'ice', 'everest', 'summit', 'dawn', 'night', 'ariamir'].includes(s.skin) ? s.skin : (s.skin === 'black' ? 'black' : 'everest');
   st.musicTheme = THEMES[s.musicTheme] ? s.musicTheme : 'everest';
   st.smartCopy = s.smartCopy !== false;
+  st.islandCalc = s.islandCalc !== false;
+  if (!st.islandCalc) { math.expr = ''; math.out = ''; mathArm(false); }
   st.react = s.musicReact !== false;
   if (s.netAlerts === false) { st.net = { online: true, vpn: '', proxy: false }; paintStatus(); }
   st.calendar = CALENDARS.includes(s.calendar) ? s.calendar : 'gregorian';
