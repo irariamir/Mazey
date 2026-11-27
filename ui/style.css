@@ -322,8 +322,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 #goo { position: absolute; top: 0; left: 50%; width: 700px; height: 96px; margin-left: -350px; pointer-events: none; filter: url(#goo-f); opacity: 0; transition: opacity .3s; }
 body.venom #island { box-shadow: none; }
 body.venom #i-face { gap: 6px; }
-body.venom #i-face i { width: 12px; height: 10px; border-radius: 0; clip-path: polygon(0 0, 100% 50%, 82% 100%, 12% 78%); }
+body.venom #i-face i { width: 12px; height: 10px; border-radius: 0; clip-path: polygon(0 0, 100% 50%, 82% 100%, 12% 78%); transition: transform .14s ease-out, height .14s, width .14s, border-radius .14s; }
 body.venom #i-face i:last-child { clip-path: polygon(100% 0, 0 50%, 18% 100%, 88% 78%); }
+body.venom #i-face.blink i, body.venom #i-face.wink i:last-child { transition-duration: .06s; }
 body.venom #i-face.happy i, body.venom #i-face.sleepy i { border: 0; background: #fff; height: 5px; }
 .sw-venom { background: radial-gradient(circle at 32% 30%, #e6eaf2 0 9%, #3a3d47 22%, #000 60%); }
 .sw-tar { background: radial-gradient(circle at 32% 30%, #c45a48 0 8%, #3a0a10 24%, #000 62%); }

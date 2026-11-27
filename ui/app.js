@@ -1271,7 +1271,7 @@ function drawLook(t, dt, live) {
   dimA += (want - dimA) * 0.18;
   const W = island.clientWidth, x0 = (SKY_W - W) / 2;
   (PAINT[lookDrawn] || paintSky)(g, t, dt, x0, x0 + W, W, skyA * dimA * (live || ['cloud', 'water', 'lava', 'ice', 'everest', 'summit', 'dawn', 'night', 'ariamir'].includes(lookDrawn) ? 1 : 0.9));
-  if (!['everest','night','dawn','summit','ariamir'].includes(lookDrawn)) stampPeak(g, x0, W, skyA * dimA);
+  if (!['everest','night','dawn','summit','ariamir','venom','tar','cloud','water','lava','ice'].includes(lookDrawn)) stampPeak(g, x0, W, skyA * dimA);
   g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
 }
 function stampPeak(g, x0, W, A) {
